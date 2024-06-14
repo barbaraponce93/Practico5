@@ -94,7 +94,7 @@ const int N=4;//CANTIDAD DE PELOTITAS
 		  color = toUpperCase(color);
     
   		  tubo.push(color);
-    // cargaTubo, que permita introducir datos en el cada uno de los tubos, es decir un push
+    // cargaTubo, introducimos las pelotitas en  cada uno de los tubos, es decir un push
 		}
 	
 	
@@ -103,14 +103,15 @@ const int N=4;//CANTIDAD DE PELOTITAS
 		 string elemento = tuboInicio.verTope();
 		 tuboInicio.pop();
    		 tuboDestino.push(elemento);
-	//pasarPelota, pasa TODOS los elementos de Tubo1 a Tubo2		
+	//pasarPelota, pasa TODOS los elementos de Tubo1 a Tubo2
+	//lo hice para que se puedan mover desde cualquier tubo		
 		}
 	}
 
 	bool hayColor(Tubo& tubo, string color) {
 		   color = toUpperCase(color);
 	   bool colorEncontrado = false;
-    Tubo aux;
+    Tubo aux;//tubo auxiliar para ir comparando todos los elementos
     int contador = 0;
 
  	   while (!tubo.pilaVacia()) {
@@ -120,7 +121,7 @@ const int N=4;//CANTIDAD DE PELOTITAS
 						//voy moviendo los elementos del tubo para comparar sus colores y contar la cantidad por tubo
       	  if (elemento == color) {
             colorEncontrado = true;
-            contador++;
+            contador++;// el contador lo agregue de onda porque al profe se le ocurrio saber cuantas pelotitas habian del mismo color
         }
    			 }
 
@@ -131,9 +132,9 @@ const int N=4;//CANTIDAD DE PELOTITAS
    		 }
 
     //c. hayColor,si esta el color buscado retorna true
-    //agregue un contador para saber cuantas pelotitas del mismo color habian en el tubo
+  
     
-    
+    //agregue esta condicion para evitar hacerlo en el main, de todas formas retorna true o false 
       if (colorEncontrado) {
         cout << " \n El color " << color << " está presente en Tubo." << " Se encuentra " << contador << " veces" <<endl;
              
@@ -144,17 +145,17 @@ const int N=4;//CANTIDAD DE PELOTITAS
 }
 
 //d. colorear, que tome pelotitas en Tubo1 y las coloca en Tubo2 solo rojas, y en Tubo3 las demás.	
-
+//recibo los tres tubos y el color
 	void colorear(Tubo& tuboInicial, string color, Tubo& tuboDestino,Tubo& tuboUltimo ){
-	 	color = toUpperCase(color);
-		while (! tuboInicial.pilaVacia()) {
+	 	color = toUpperCase(color);//paso a mayuscula para evitar errores en la comparacion
+		while (! tuboInicial.pilaVacia()) {//recorro el tubo inicial
 			  	string elemento= tuboInicial.verTope();
 			  		tuboInicial.pop();
-			  	if(elemento==color){
+			  	if(elemento==color){//y voy comparando color
       	  	
-      				tuboDestino.push(elemento);
+      				tuboDestino.push(elemento);//si son iguales lo guardo en el segundo tubo
 				}else{
-					tuboUltimo.push(elemento);
+					tuboUltimo.push(elemento);//sino en el tercero
 				}
 		}
 	}
