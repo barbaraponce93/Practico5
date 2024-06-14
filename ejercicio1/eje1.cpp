@@ -6,30 +6,32 @@ elementos deben quedar nuevamente en Tubo1
 d. colorear, que tome pelotitas en Tubo1 y las coloca en Tubo2 solo rojas, y en Tubo3 las demás.*/
 #include <iostream>
 #include<locale.h>
+#include <string> 
+#include <cctype>
+#include <algorithm>
+
 using namespace std;
-const int N=4;
+
+const int N=4;//CANTIDAD DE PELOTITAS
 
 
-	struct Pelota{
-		string color;
-		
-	};
+
 	struct Tubo{
 		  private: 
-	    int tope= -1;// igual a un valor invalido...cual?
-	   Pelota  pelotitas[N]; // modelar la pila con un arreglo
+	    int tope= -1;
+	   string tubito[N]; // modelar la pila con un arreglo
 		public:
 	
-	 Pelota verTope(){
-			 return pelotitas[tope]; 
+	 string verTope(){
+			 return tubito[tope]; 
 			  
 		}	
-	void push(Pelota elemento){
+	void push(  string elemento){
 			if(tope<N - 1){
-				tope++;// 1- subir el tope
-				pelotitas[tope]=elemento;// 2- push del elemento en el lugar libre
+				tope++;
+				tubito[tope]=elemento;
 			
-			//	cout << "Push del elemento " << elemento << " en la posicion " << tope << endl;
+				cout<< " \n Push del elemento " << elemento << " en la posicion " << tope << endl;
 			}else{
 				cout<<"La pila esta llenissima!"<<endl;	
 			}
@@ -37,8 +39,8 @@ const int N=4;
 	    
 		void pop(){
 			if(!pilaVacia()){
-			//	  cout<<"Elemento removido: "<<pelotitas[tope]<<endl;
-				tope--;	// bajamos el tope (apunta al ultimo accesible)	
+				  cout<<" \n Elemento removido: "<<tubito[tope]<<endl;
+				tope--;	
 				 
 			}
 			else{
@@ -54,6 +56,7 @@ const int N=4;
 		}		
 			return estado;	// devolver que esta vacia
 		}
+		
 		bool pilaLlena(){	
 			bool estado=false; // no llena
 			if( tope==N   ){
@@ -61,28 +64,144 @@ const int N=4;
 			}	
 			return estado;	// devolver que esta llena
 		
-	//	int getTope(){ } // devolveria el tope de la pila 
-	};
+		} 
+	
+		void mostrarPila(){
+			if(tope>-1){
+				cout<<"\t[ ";
+				for(int i=0;i<=tope;i++){
+					cout<<tubito[i]<<" , ";
+				}	
+				cout<<" último elemento agregado]"<<endl;
+			}else{
+				cout<<" \t Nada que mostrar,la pila esta vacia"<<endl;
+			}
+		}
+
+};
+	string toUpperCase(const string& str) {
+    string result = str;
+    transform(result.begin(), result.end(), result.begin(), ::toupper);
+//transform:aplica transformaciones a un rango de elementos. ej: convertir letras
+// minúsculas a mayúsculas usando una expresión lambda.   
+// funcion toupper de la biblio <cctype> convierte solo una letra, para aplicarla deberia
+// usar un for para que convierta toda la cadena
+    return result;
+    
+}
+	
+	void cargaTubo(Tubo& tubo,  string color) {
+		  color = toUpperCase(color);
+    
+  		  tubo.push(color);
+    // cargaTubo, que permita introducir datos en el cada uno de los tubos, es decir un push
+		}
 	
 	
-	
-	void mensajeEstadoPila(){
-		if(pilaVacia()){
-			cout<<"La pila esta vacía"<<endl;
-		}else{
-			string color = verTope().color;
-			cout<<"El último elemento de la pila es "<< color <<endl;
+	void pasarPelota(Tubo& tuboInicio,Tubo& tuboDestino ){
+  		while (!tuboInicio.pilaVacia() && !tuboDestino.pilaLlena()){
+		 string elemento = tuboInicio.verTope();
+		 tuboInicio.pop();
+   		 tuboDestino.push(elemento);
+	//pasarPelota, pasa TODOS los elementos de Tubo1 a Tubo2		
+		}
+	}
+
+	bool hayColor(Tubo& tubo, string color) {
+		   color = toUpperCase(color);
+	   bool colorEncontrado = false;
+    Tubo aux;
+    int contador = 0;
+
+ 	   while (!tubo.pilaVacia()) {
+      	  string elemento = tubo.verTope();
+      	  tubo.pop();
+      	  aux.push(elemento);
+						//voy moviendo los elementos del tubo para comparar sus colores y contar la cantidad por tubo
+      	  if (elemento == color) {
+            colorEncontrado = true;
+            contador++;
+        }
+   			 }
+
+   		 while (!aux.pilaVacia()) {//devuelvo todo al tubo original
+       	 string elemento = aux.verTope();
+     	 aux.pop();
+      	  tubo.push(elemento);
+   		 }
+
+    //c. hayColor,si esta el color buscado retorna true
+    //agregue un contador para saber cuantas pelotitas del mismo color habian en el tubo
+    
+    
+      if (colorEncontrado) {
+        cout << " \n El color " << color << " está presente en Tubo." << " Se encuentra " << contador << " veces" <<endl;
+             
+    } else {
+        cout << "\n El color " << color << " NO está presente en Tubo." << endl;
+    }
+    return colorEncontrado;
+}
+
+//d. colorear, que tome pelotitas en Tubo1 y las coloca en Tubo2 solo rojas, y en Tubo3 las demás.	
+
+	void colorear(Tubo& tuboInicial, string color, Tubo& tuboDestino,Tubo& tuboUltimo ){
+	 	color = toUpperCase(color);
+		while (! tuboInicial.pilaVacia()) {
+			  	string elemento= tuboInicial.verTope();
+			  		tuboInicial.pop();
+			  	if(elemento==color){
+      	  	
+      				tuboDestino.push(elemento);
+				}else{
+					tuboUltimo.push(elemento);
+				}
 		}
 	}
 			
-			
 
-};
+
+	
 	
 	
 int	main(){
+	setlocale(LC_ALL,"Spanish");
 	Tubo Tubo1, Tubo2, Tubo3;
 	
-	
+	cargaTubo(Tubo1, "verde");
+    cargaTubo(Tubo1, "rojo");
+  	cargaTubo(Tubo1, "azul");
+ 	cargaTubo(Tubo1, "rojo");
+ 	
+ 	
+    cout << " \n Contenido de Tubo1: ";
+    Tubo1.mostrarPila();
+
+   // cout << "\nPasando elementos de Tubo1 a Tubo2..." << endl;
+   // pasarPelota(Tubo1, Tubo2);
+
+  //  cout << "Contenido de Tubo2: ";
+  //  Tubo2.mostrarPila();
+    
+//	cout << " \n Verificando colores en el tubo" << endl;
+  // hayColor(Tubo1, "rojo");
+  
+
+ //   cout << "\n Contenido de Tubo después de buscar color: ";
+ //   Tubo1.mostrarPila();
+ 
+ 
+ cout<<"\nAplico función colorear"<<endl;
+ colorear(Tubo1,"Rojo",Tubo2,Tubo3);
+ 
+ 
+ cout << "\n Contenido de los tres Tubos después de mover un  color: "<<endl;
+ cout<<"Tubo 1";
+  Tubo1.mostrarPila();
+ cout<<"Tubo 2";
+ Tubo2.mostrarPila();
+ cout<<"Tubo 3";
+ Tubo3.mostrarPila();    
+    
 	return 0;
 }
