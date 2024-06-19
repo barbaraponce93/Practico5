@@ -1,5 +1,5 @@
 #include <iostream>
-#include <locale>
+#include <locale.h>
 
 using namespace std;
 
@@ -90,6 +90,7 @@ void reemplazar(Pila& pilaA, int x, int y) {
 }
 
 int main() {
+	setlocale(LC_ALL,"Spanish");
     Pila pilaA(5), pilaB(5), pilaC(5);
 
     pilaA.push(1);
