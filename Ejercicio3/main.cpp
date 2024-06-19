@@ -48,7 +48,7 @@ public:
     }
 
     void pop() {
-        // bajamos el tope en otras palabraas apunta al último accesible
+        
         if (tope >= 0) {
             cout << "Auto con placa " << autos[tope].placa << " ha sido removido" << endl;
             tope--;
@@ -82,19 +82,40 @@ public:
 
 int main() {
     Pila cochera1, cochera2;
-    Auto auto1 = {"aaa", "Lucas Perez", 9};
-    Auto auto2 = {"bbb", "Jose", 10};
-    Auto auto3 = {"ccc", "Mauro", 11};
-	
-//	cochera1.mostrarCochera();
-	
-    cochera1.push(auto1);
-	cochera1.push(auto3);
-    cochera2.push(auto2);
+    int nAutos;
+    cout << "Ingrese el número de autos a estacionar: ";
+    cin >> nAutos;
+
+    for (int i = 0; i < nAutos; i++) {
+        Auto autoNuevo;
+        cout << "Ingrese la patente " << i + 1 << ": ";
+        cin >> autoNuevo.placa;
+        cout << "Ingrese el nomreb del dueño del auto " << i + 1 << ": ";
+        cin >> autoNuevo.propietario;
+        cout << "Ingrese la hora de entrada del auto " << i + 1 << ": ";
+        cin >> autoNuevo.horaEntrada;
+
+        int cochera;
+        cout << "Ingrese la cochera (1 o 2) para el auto " << i + 1 << ": ";
+        cin >> cochera;
+
+        if (cochera == 1) {
+            cochera1.push(autoNuevo);
+        } else if (cochera == 2) {
+            cochera2.push(autoNuevo);
+        } else {
+            cout << "Cochera inválida, intente de nuevo." << endl;
+            i--; // repetir el ingreso de datos para este auto
+        }
+    }
 
     cout << "Estado de Cochera1:" << endl;
     cochera1.mostrarCochera();
 
+    cout << "Estado de Cochera2:" << endl;
+    cochera2.mostrarCochera();
+
+    // Remover un auto de Cochera1 para mostrar el funcionamiento del pop
     cochera1.pop();
     cout << "Estado de Cochera1 después de un pop:" << endl;
     cochera1.mostrarCochera();
