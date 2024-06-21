@@ -13,7 +13,7 @@ D. Se deben averiguar cuál es el último número agregado a cierta cola. Ej. Ultim
 #include <iostream>
 using namespace std;
 
-const int MAX=5;
+const int MAX=5; // Maximo tamaño de la fila
 
 struct Persona{
 	int dni;
@@ -23,7 +23,7 @@ struct Persona{
 struct Fila {
 private:
     string nombre;
-    Persona fila[MAX]; // Array de Personas en lugar de enteros
+    Persona fila[MAX]; // Array de PersonaS
     int p = 0;
     int u = -1;
     int cant = 0;
@@ -31,35 +31,35 @@ private:
 public:
     Fila(const string &n) : nombre(n) {}
 
-    bool filaVacia() { // EMPTY
+    bool filaVacia() {
         return cant == 0;
     }
-    bool filaLlena() { // FULL
+    bool filaLlena() {
         return cant == MAX;
     }
-    void Enfilar(Persona elem) { // ENQUEUE
+    void Enfilar(Persona elem) { // Agrega una persona a la fila
         if (!filaLlena()) {
-            u = (u + 1) % MAX;
+            u = (u + 1) % MAX; // Actualiza el indice de la ultima persona en la fila
             fila[u] = elem;
             cant++;
         } else
             cout <<"No se puede enfilar" << endl;
     }
-    void Desenfilar() { // DEQUEUE
+    void Desenfilar() { // Remueve una persona de la fila
         if (!filaVacia()) {
-            p = (p + 1) % MAX;
+            p = (p + 1) % MAX; // Actualiza el indice de la primer persona en la fila
             cant--;
-            if (filaVacia()) {
+            if (filaVacia()) { // Reinicia los indices si la fila queda vacia
                 p = 0;
                 u = -1;
             }
         } else
             cout<<"No se puede eliminar"<<endl;
     }
-    Persona verPrimero() { // FRONT
+    Persona verPrimero() { 
         return fila[p];
     }
-    Persona verUltimo() { // BACK
+    Persona verUltimo() { 
         return fila[u];
     }
     int getCantidad() {
@@ -75,7 +75,7 @@ public:
     }
 };
 
-void enfilarPersona(Fila &filaGeneral, Fila &fila, Persona &persona){
+void enfilarPersona(Fila &filaGeneral, Fila &fila, Persona &persona){ // Funcion para enfilar una persona en una fila
 	if(!fila.filaLlena()){
 		fila.Enfilar(persona);
 		cout<<"\nLa persona con DNI "<<persona.dni<<" fue agregada a la "<<fila.getNombre()<<".\n"<<endl;
@@ -87,7 +87,7 @@ void enfilarPersona(Fila &filaGeneral, Fila &fila, Persona &persona){
 }
 
 
-void atenderFila(Fila &fila){
+void atenderFila(Fila &fila){ // Funcion para atender a una persona en una fila
 	if(!fila.filaVacia()){
         cout<<"\nSe atiende a la persona con DNI "<<fila.verPrimero().dni<<" de la "<<fila.getNombre()<<".\n"<<endl;
         fila.Desenfilar();
@@ -97,7 +97,7 @@ void atenderFila(Fila &fila){
 	system("PAUSE");
 }
 
-void verUltimoDNI(Fila &fila) {
+void verUltimoDNI(Fila &fila) { // Funcion para ver el ultimo DNI en una fila
     if (!fila.filaVacia()) {
         cout << "\nEl ultimo DNI de la " << fila.getNombre() << " es " << fila.verUltimo().dni << ".\n" << endl;
     } else {
@@ -111,7 +111,7 @@ int main() {
 	Fila filaGeneral("Fila General"), filaD("Fila Depositos"), filaE("Fila Extracciones"), filaO("Fila Varios");
 	Persona persona;
 	
-	for(int i=0;i<5;i++){
+	for(int i=0;i<5;i++){ // Inicializa la fila general con personas
 		filaGeneral.Enfilar(persona);
 	}
 	
@@ -142,7 +142,7 @@ int main() {
                 cin >> persona.operacion;
                 persona.operacion = toupper(persona.operacion);
                 
-                switch (persona.operacion){
+                switch (persona.operacion){ // Enfila la persona en la fila que corresponda segun la letra
                 	case 'D':
 						enfilarPersona(filaGeneral,filaD,persona);
 						break;
@@ -158,7 +158,7 @@ int main() {
 				}
                 break;
             case 2:
-                atenderFila(filaD);
+                atenderFila(filaD); // Se atiende segun la fila que se elija
                 break;
             case 3:
                 atenderFila(filaE);
@@ -170,7 +170,9 @@ int main() {
             	char operacion;
                 cout<<"Ingrese operacion para ver el ultimo DNI (D para Depositos, E para Extracciones, O para Varios): ";
                 cin>>operacion;
-                switch (operacion){
+                operacion = toupper(operacion);
+                
+                switch (operacion){ // Muestra el ultimo DNI en la fila que corresponda
                 	case 'D':
                 		verUltimoDNI(filaD);	
                 		break;
