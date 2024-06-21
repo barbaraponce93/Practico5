@@ -49,6 +49,10 @@ public:
         if (!filaVacia()) {
             p = (p + 1) % MAX;
             cant--;
+            if (filaVacia()) {
+                p = 0;
+                u = -1;
+            }
         } else
             cout<<"No se puede eliminar"<<endl;
     }
@@ -71,19 +75,35 @@ public:
     }
 };
 
+void enfilarPersona(Fila &filaGeneral, Fila &fila, Persona &persona){
+	if(!fila.filaLlena()){
+		fila.Enfilar(persona);
+		cout<<"\nLa persona con DNI "<<persona.dni<<" fue agregada a la "<<fila.getNombre()<<".\n"<<endl;
+		filaGeneral.Desenfilar();
+	}else{
+		cout<<"\nLa fila "<<fila.getNombre()<<" esta llena.\n"<<endl;
+	}
+	system("PAUSE");
+}
+
+
 void atenderFila(Fila &fila){
 	if(!fila.filaVacia()){
-        Persona primeraPersonaEnFila = fila.verPrimero();
+        cout<<"\nSe atiende a la persona con DNI "<<fila.verPrimero().dni<<" de la "<<fila.getNombre()<<".\n"<<endl;
         fila.Desenfilar();
-        cout<<"\nSe atiende a la persona con DNI "<<primeraPersonaEnFila.dni<<" de la "<<fila.getNombre()<<".\n"<<endl;
 	}else{
 		cout<<"\nNo hay nadie en la "<<fila.getNombre()<<".\n"<<endl;
 	}
 	system("PAUSE");
 }
 
-void verUltimoDNI(Fila &fila){
-	cout<<"\nEl ultimo DNI de la "<<fila.getNombre()<<" es "<<fila.verUltimo().dni<<".\n"<<endl;
+void verUltimoDNI(Fila &fila) {
+    if (!fila.filaVacia()) {
+        cout << "\nEl ultimo DNI de la " << fila.getNombre() << " es " << fila.verUltimo().dni << ".\n" << endl;
+    } else {
+        cout << "\nLa " << fila.getNombre() << " esta vacia.\n" << endl;
+    }
+    system("PAUSE");
 }
 
 int main() {
@@ -102,14 +122,10 @@ int main() {
         cout<<"2. Atender Depositos"<<endl;
         cout<<"3. Atender Extracciones"<<endl;
         cout<<"4. Atender Varios"<<endl;
-        cout<<"5. Ver ultimo DNI en cola"<<endl;
+        cout<<"5. Ver ultimo DNI en la fila"<<endl;
         cout<<"6. Salir\n"<<endl;
         cout<<"Elija una opcion: ";
         cin>>opcion;
-		
-		string nombreFila;
-        bool enfilado;
-        Persona primeraPersonaEnFilaGeneral;
 		
         switch (opcion) {
             case 1:
@@ -118,39 +134,27 @@ int main() {
             		system("PAUSE");
             		break;
 				}
-            	primeraPersonaEnFilaGeneral=filaGeneral.verPrimero();
-            	enfilado=false;
+            	persona=filaGeneral.verPrimero();
             	cout<<"\nSe atiende a la primera persona de la fila general"<<endl;
                 cout << "Ingrese DNI: ";
-                cin >> primeraPersonaEnFilaGeneral.dni;
-                cout << "Ingrese operacion (D para Depositos, E para Extracciones, O para Otros): ";
-                cin >> primeraPersonaEnFilaGeneral.operacion;
+                cin >> persona.dni;
+                cout << "Ingrese operacion (D para Depositos, E para Extracciones, O para Varios): ";
+                cin >> persona.operacion;
+                persona.operacion = toupper(persona.operacion);
                 
-                switch (primeraPersonaEnFilaGeneral.operacion){
+                switch (persona.operacion){
                 	case 'D':
-                		filaD.Enfilar(primeraPersonaEnFilaGeneral);
-                		nombreFila = filaD.getNombre();
-                		enfilado=true;		
-                		break;
+						enfilarPersona(filaGeneral,filaD,persona);
+						break;
                 	case 'E':
-						filaE.Enfilar(primeraPersonaEnFilaGeneral);
-						nombreFila = filaE.getNombre();
-                		enfilado=true;
+						enfilarPersona(filaGeneral,filaE,persona);
 						break;
 					case 'O':
-						filaO.Enfilar(primeraPersonaEnFilaGeneral);
-						nombreFila = filaO.getNombre();
-                		enfilado=true;
+						enfilarPersona(filaGeneral,filaO,persona);
 						break;
 					default:
 						cout<<"\nOpcion no valida.\n"<<endl;
-						system("PAUSE");		
-				}
-				
-				if(enfilado){
-					filaGeneral.Desenfilar();
-					cout<<"\nLa persona con DNI "<<primeraPersonaEnFilaGeneral.dni<<" fue agregada a la "<<nombreFila<<".\n"<<endl;
-					system("PAUSE");
+						system("PAUSE");				
 				}
                 break;
             case 2:
@@ -164,7 +168,7 @@ int main() {
                 break;
             case 5:
             	char operacion;
-                cout<<"Ingrese operacion para ver el ultimo DNI (D para Depositos, E para Extracciones, O para Otros): ";
+                cout<<"Ingrese operacion para ver el ultimo DNI (D para Depositos, E para Extracciones, O para Varios): ";
                 cin>>operacion;
                 switch (operacion){
                 	case 'D':
@@ -178,14 +182,14 @@ int main() {
 						break;
 					default:
 						cout<<"\nOpcion no valida.\n"<<endl;
-						system("PAUSE");		
+						system("PAUSE");				
 				}
                 break;
             case 6:
                 return 0;
             default:
-                cout<<"\nOpcion no valida.\n"<<endl;
-                system("PAUSE");
+                cout<<"\nOpcion no valida.\n"<<endl; 
+				system("PAUSE");       
         }
     }
     return 0;
