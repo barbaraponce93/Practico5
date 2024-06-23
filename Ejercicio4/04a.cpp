@@ -1,7 +1,7 @@
 /*
 a. Dada una fila A, Invertirla. Mostrar ambas filas. (usar fila auxiliar si lo necesita)
 */
-
+#include<locale.h>
 #include <iostream>
 using namespace std;
 
@@ -44,52 +44,64 @@ struct Fila{
 	int getCantidad(){ 
 	    return cant;
 	}
-	
-	void vaciarFila(){
-		p=0;
-    	u=-1;
-    	cant=0;
+};
+
+void mostrarFila(Fila fila){
+	int i=1;
+	while(!fila.filaVacia()){
+		cout<<i<<"° -> "<<fila.verPrimero()<<endl;
+		fila.Desenfilar();
+		i++;
+	}
+}
+
+void vaciarFila(Fila &fila){
+	while(!fila.filaVacia()){
+		fila.Desenfilar();
 	}
 	
-	void mostrarArreglo(){
-		for(int i=0;i<MAX;i++){
-			cout<<fila[i]<<endl;
-		}
-	}	
-};
+}
 
 void invertirFila(Fila& filaA){
 	
-	Fila filaB;
+	Fila filaB; // Fila auxiliar para almacenar los elementos en orden invertido
 	
 	int cantidad = filaA.getCantidad();
 	
 	cout<<"Fila A"<<endl;
 	
-	filaA.mostrarArreglo();
+	mostrarFila(filaA);
 	
-	for(int k=0;k<cantidad;k++){
+	for(int k=0;k<cantidad;k++){  // Invierte los elementos de la filaA en la filaB
 		for(int i=0;i<cantidad-1;i++){
 			int elem = filaA.verPrimero();
-			filaA.Desenfilar();
-			filaA.Enfilar(elem);					
+			filaA.Desenfilar(); // Desenfila el primer elemento de la fila A
+			filaA.Enfilar(elem); // Enfila el elemento defenfilado, al final de la fila A
+			
+			 // Este proceso desplaza el primer elemento al final de la fila A,
+        	// lo que permite que el siguiente elemento en la fila A se convierta 
+			// en el nuevo primer elemento, rotando asi todos los elementos menos el ultimo.			
 		}
-		filaB.Enfilar(filaA.verPrimero());	
+		filaB.Enfilar(filaA.verPrimero());
+		// Despues de rotar los elementos, el ultimo elemento de la fila rotada es el que
+    	// queda como primer elemento, el cual sera enfilado en la fila B
 	}
 	
-	filaA.vaciarFila();
+	vaciarFila(filaA);
 	
-	for(int i=0;i<cantidad;i++){
+	for(int i=0;i<cantidad;i++){  // Transfiere los elementos invertidos de fila B a fila A
 		filaA.Enfilar(filaB.verPrimero());
 		filaB.Desenfilar();
 	}
 	
 	cout<<"\nFila A invertida"<<endl;
 	
-	filaA.mostrarArreglo();
+	mostrarFila(filaA);
 }
 
 int main(){
+	
+	setlocale(LC_ALL,"Spanish");
 	
 	Fila filaA;
 		
