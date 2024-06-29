@@ -1,120 +1,123 @@
 #include <iostream>
 #include <locale.h>
-
 using namespace std;
 
-struct Pila {
-    int *elementos;
-    int capacidad;
+const int N = 10; 
+
+class Pila {
+private:
     int tope;
+    int elementos[N];
 
-    Pila(int tam) {
-        capacidad = tam;
-        elementos = new int[capacidad];
-        tope = -1;
-    }
-
-    ~Pila() {
-        delete[] elementos;
-    }
-
-    bool estaVacia() {
-        return tope == -1;
-    }
-
-    bool estaLlena() {
-        return tope == capacidad - 1;
+public:
+    Pila() {
+        tope = -1; 
     }
 
     void push(int elemento) {
-        if (!estaLlena()) {
-            elementos[++tope] = elemento;
+        if (tope < N - 1) {
+            tope++; 
+            elementos[tope] = elemento; 
+            cout << "Elemento " << elemento << " ha sido agregado a la posición " << tope << endl;
         } else {
-            cout << "Error: Pila llena, no se puede insertar." << endl;
+            cout << "La pila está llena!" << endl;
+        }
+    }
+
+    int verTope() {
+        if (tope >= 0) {
+            return elementos[tope];
+        } else {
+            cout << "La pila está vacía" << endl;
+            return -1; 
         }
     }
 
     void pop() {
-        if (!estaVacia()) {
-            --tope;
+        if (tope >= 0) {
+            cout << "Elemento " << elementos[tope] << " ha sido removido" << endl;
+            tope--;
         } else {
-            cout << "Error: Pila vacía, no se puede eliminar." << endl;
+            cout << "La pila está vacía" << endl;
         }
     }
 
-    int top() {
-        if (!estaVacia()) {
-            return elementos[tope];
+    bool pilaVacia() {
+        return tope == -1;
+    }
+
+    bool pilaLlena() {
+        return tope == N - 1;
+    }
+
+    int getTope() { 
+        return tope;
+    }
+
+    void mostrarPila() {
+        if (pilaVacia()) {
+            cout << "La pila está vacía" << endl;
         } else {
-            cout << "Error: Pila vacía, no hay elemento en la cima." << endl;
-            return -1; 
+            for (int i = tope; i >= 0; i--) {
+                cout << "Elemento: " << elementos[i] << endl;
+            }
         }
     }
 };
 
 void invierteConAux(Pila& pilaA, Pila& pilaB, Pila& pilaC) {
-    while (!pilaA.estaVacia()) {
-        pilaC.push(pilaA.top()); // Mover de A a C
+    while (!pilaA.pilaVacia()) {
+        pilaC.push(pilaA.verTope()); // Mover de A a C
         pilaA.pop();
     }
-    while (!pilaC.estaVacia()) {
-        pilaB.push(pilaC.top()); // Mover de C a B
+    while (!pilaC.pilaVacia()) {
+        pilaB.push(pilaC.verTope()); // Mover de C a B
         pilaC.pop();
     }
 }
 
 void invierteSinAux(Pila& pilaA, Pila& pilaB) {
-    Pila temp(pilaA.capacidad);
-    while (!pilaA.estaVacia()) {
-        temp.push(pilaA.top());
+    Pila temp;
+    while (!pilaA.pilaVacia()) {
+        temp.push(pilaA.verTope());
         pilaA.pop();
     }
-    while (!temp.estaVacia()) {
-        pilaB.push(temp.top());
+    while (!temp.pilaVacia()) {
+        pilaB.push(temp.verTope());
         temp.pop();
     }
 }
 
 void reemplazar(Pila& pilaA, int x, int y) {
-    Pila temp(pilaA.capacidad);
-    while (!pilaA.estaVacia()) {
-        int val = pilaA.top();
+    Pila temp;
+    while (!pilaA.pilaVacia()) {
+        int val = pilaA.verTope();
         pilaA.pop();
         if (val == x) val = y;
         temp.push(val);
     }
-    while (!temp.estaVacia()) {
-        pilaA.push(temp.top());
+    while (!temp.pilaVacia()) {
+        pilaA.push(temp.verTope());
         temp.pop();
     }
 }
 
 int main() {
-	setlocale(LC_ALL,"Spanish");
-    Pila pilaA(5), pilaB(5), pilaC(5);
+    setlocale(LC_ALL,"Spanish");
+    Pila pilaA, pilaB, pilaC;
 
     pilaA.push(1);
     pilaA.push(2);
     pilaA.push(3);
 
     cout << "Pila A: ";
-    while (!pilaA.estaVacia()) {
-        cout << pilaA.top() << " ";
-        pilaA.pop();
-    }
+    pilaA.mostrarPila();
     cout << endl;
-
-    pilaA.push(1);
-    pilaA.push(2);
-    pilaA.push(3);
 
     invierteConAux(pilaA, pilaB, pilaC);
 
     cout << "Pila B después de invertir pila A: ";
-    while (!pilaB.estaVacia()) {
-        cout << pilaB.top() << " ";
-        pilaB.pop();
-    }
+    pilaB.mostrarPila();
     cout << endl;
 
     pilaA.push(1);
@@ -124,10 +127,7 @@ int main() {
     invierteSinAux(pilaA, pilaB);
 
     cout << "Pila B después de invertir pila A sin auxiliar: ";
-    while (!pilaB.estaVacia()) {
-        cout << pilaB.top() << " ";
-        pilaB.pop();
-    }
+    pilaB.mostrarPila();
     cout << endl;
 
     pilaA.push(1);
@@ -137,10 +137,7 @@ int main() {
     reemplazar(pilaA, 2, 5);
 
     cout << "Pila A después de reemplazar 2 por 5: ";
-    while (!pilaA.estaVacia()) {
-        cout << pilaA.top() << " ";
-        pilaA.pop();
-    }
+    pilaA.mostrarPila();
     cout << endl;
 
     return 0;
